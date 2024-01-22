@@ -1,7 +1,12 @@
 import "package:flutter/material.dart";
 import "dart:math";
+import "package:flutter_riverpod/flutter_riverpod.dart";
 
-void main() => runApp(const MyApp());
+void main() => runApp(
+      const ProviderScope(
+        child: MyApp(),
+      ),
+    );
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -10,9 +15,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: const HomePage(),
-      title: "Testing",
+      title: "AI Mastery",
       theme: ThemeData(
-
         colorSchemeSeed: Palette.calmBlue,
         useMaterial3: true,
       ),
@@ -34,7 +38,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       backgroundColor: Palette.calmBlue,
       appBar: const CAppBar(
-        title: "AI Mastery",
+        title: "Login",
         centerTitle: true,
       ),
       body: LoginPage(
@@ -56,53 +60,139 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Form(
-          key: _formKey,
-          child: Padding(
-            padding: const EdgeInsets.only(
-              left: 12.0,
-              right: 12.0,
-              top: 12.0,
+    return Form(
+      key: _formKey,
+      child: Padding(
+        padding: const EdgeInsets.only(
+          left: 12.0,
+          right: 12.0,
+          top: 12.0,
+        ),
+        child: Column(
+          children: [
+            TextFormField(
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return "Enter a value first";
+                }
+                return null;
+              },
+              decoration: InputDecoration(
+                filled: true,
+                label: Text(
+                  textScaler: TextScaler.linear(
+                    ScaleSize.textScaleFactor(context),
+                  ),
+                  "User ID",
+                  style: const TextStyle(
+                    color: Colors.black45,
+                    fontSize: 16,
+                  ),
+                ),
+                prefixIcon: const Icon(
+                  Icons.person,
+                ),
+                fillColor: Palette.offWhite,
+                border: UnderlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide.none,
+                ),
+                focusedBorder: UnderlineInputBorder(
+                  borderRadius: BorderRadius.circular(12.0),
+                  borderSide: BorderSide.none,
+                ),
+              ),
+              cursorWidth: 2,
             ),
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  TextFormField(
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return "Enter a value first";
-                      }
-                      return null;
-                    },
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      label: Text(
-                        "User ID",
-                      ),
+            const SizedBox(
+              height: 8,
+            ),
+            TextFormField(
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return "Enter a value first";
+                }
+                return null;
+              },
+              decoration: InputDecoration(
+                filled: true,
+                label: Text(
+                  textScaler: TextScaler.linear(
+                    ScaleSize.textScaleFactor(context),
+                  ),
+                  "Password",
+                  style: const TextStyle(
+                    color: Colors.black45,
+                    fontSize: 16,
+                  ),
+                ),
+                prefixIcon: const Icon(
+                  Icons.password,
+                ),
+                fillColor: Palette.offWhite,
+                border: UnderlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide.none,
+                ),
+                focusedBorder: UnderlineInputBorder(
+                  borderRadius: BorderRadius.circular(12.0),
+                  borderSide: BorderSide.none,
+                ),
+              ),
+              cursorWidth: 2,
+              obscureText: true,
+            ),
+            const SizedBox(
+              height: 14,
+            ),
+            ElevatedButton(
+              onPressed: () {
+                if (_formKey.currentState!.validate()) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Processing Data'),
+                    ),
+                  );
+                }
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Palette.offWhite,
+              ),
+              child: const Text('Submit'),
+            ),
+            const Spacer(),
+            const Divider(
+              height: 4,
+              thickness: 2.5,
+            ),
+            Padding(
+              padding: const EdgeInsets.only(
+                top: 8.0,
+                bottom: 8.0,
+              ),
+              child: InkWell(
+                borderRadius: BorderRadius.circular(16),
+                onTap: () {},
+                child: Padding(
+                  padding: const EdgeInsets.all(6.5),
+                  child: Text(
+                    textScaler: TextScaler.linear(
+                      ScaleSize.textScaleFactor(context),
+                    ),
+                    'Terms & Conditions',
+                    style: const TextStyle(
+                      fontFamily: 'Inter',
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white,
+                      fontSize: 18,
                     ),
                   ),
-                  ElevatedButton(
-                    onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('Processing Data'),
-                          ),
-                        );
-                      }
-                    },
-                    style: ElevatedButton.styleFrom(
-                        backgroundColor: Palette.offWhite),
-                    child: const Text('Submit'),
-                  ),
-                ],
+                ),
               ),
             ),
-          ),
+          ],
         ),
-      ],
+      ),
     );
   }
 }
@@ -136,7 +226,9 @@ class CAppBar extends StatelessWidget implements PreferredSizeWidget {
       ],
       title: Text(
         title,
-        textScaleFactor: ScaleSize.textScaleFactor(context),
+        textScaler: TextScaler.linear(
+          ScaleSize.textScaleFactor(context),
+        ),
         style: const TextStyle(
           fontSize: 28,
         ),
@@ -145,8 +237,8 @@ class CAppBar extends StatelessWidget implements PreferredSizeWidget {
   }
 }
 
-// adding some code for text scaling
 class ScaleSize {
+  // adding some code for text scaling
   static double textScaleFactor(BuildContext context,
       {double maxTextScaleFactor = 2}) {
     final width = MediaQuery.of(context).size.width;
